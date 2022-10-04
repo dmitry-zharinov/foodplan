@@ -91,8 +91,7 @@ WSGI_APPLICATION = 'foodplan.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': env.str(
-            'DATABASE_FILEPATH', Path(BASE_DIR, 'db.sqlite3')),
+        'NAME': Path(BASE_DIR, 'db.sqlite3'),
     }
 }
 
