@@ -43,7 +43,7 @@ body {
 
 
 .foodplan__head_bg {
-    background-image: url(img/head-bg.png);
+    background-image: url(/static/img/head-bg.png);
     background-repeat: no-repeat;
     background-position: right;
     background-size: contain;
@@ -53,7 +53,7 @@ body {
     background-color: rgba(255, 255, 255, 0.72);
 }
 .foodplan__mobapp {
-    background-image: url(img/phone.png);
+    background-image: url(/static/img/phone.png);
     background-repeat: no-repeat;
     background-position: 98% 50%;
     background-size: contain;
@@ -76,7 +76,7 @@ body {
     }
 }
 .foodplan__creator {
-    background-image: url(img/avatar.jpg);
+    background-image: url(/static/img/avatar.jpg);
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
