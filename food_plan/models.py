@@ -1,79 +1,98 @@
+from django.contrib.auth.models import User
 from django.db import models
+
+PERIOD_CHOICES = [
+    '3 мес.',
+    '12 мес.',
+]
+
+RECIPE_TYPE = [
+    'завтрак',
+    'обед',
+    'ужин',
+    'десерт',
+]
 
 
 class Menu(models.Model):
-    name = models.CharField(
-        'название',
-        max_length=50
+    client = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
     )
-    description = models.TextField(
-        'описание',
-        max_length=200,
+    period = models.CharField(
+        'Срок подписки',
+        max_length=10,
+        choices=PERIOD_CHOICES,
+        default='3 мес.',
+    )
+    calories_per_day = models.IntegerField(
+        'Калорий в день (всего)',
+    )
+    with_breakfasts = models.BooleanField(
+        'Завтраки',
+        default=True,
+    )
+    with_lunches = models.BooleanField(
+        'Обеды',
+        default=True,
+    )
+    with_suppers = models.BooleanField(
+        'Ужины',
+        default=True,
+    )
+    with_desserts = models.BooleanField(
+        'Десерты',
+        default=True,
+    )
+    persons = models.IntegerField(
+        'Количество персон',
+        default=1,
+    )
+    allergens = models.ManyToManyField(
+        'Allergen',
+        verbose_name='Исключить аллергены',
+        related_name='in_menus',
+        null=True,
         blank=True,
     )
 
     class Meta:
-        verbose_name = 'меню'
-        verbose_name_plural = 'меню'
+        verbose_name = 'Меню'
+        verbose_name_plural = 'Меню'
 
     def __str__(self):
-        return self.name
-
-
-class Allergen(models.Model):
-    allergen_name = models.CharField('Название аллергена', max_length=200)
-
-    class Meta:
-        verbose_name = 'Аллерген'
-        verbose_name_plural = 'Аллергены'
-
-    def __str__(self):
-        return self.allergen_name
-
-
-class Unit(models.Model):
-    name = models.CharField('Единица измерения продукта', max_length=50)
-
-    class Meta:
-        verbose_name = 'Единица измерения продукта'
-        verbose_name_plural = 'Единицы измерения'
-
-    def __str__(self):
-        return self.name
-
-
-class Ingredient(models.Model):
-    name = models.CharField('Название ингредиента', max_length=200)
-    unit = models.ForeignKey(
-        Unit,
-        on_delete=models.SET_NULL,
-        verbose_name='Единица измерения',
-        null=True)
-
-    allergen = models.ForeignKey(
-        Allergen,
-        on_delete=models.SET_NULL,
-        verbose_name='Аллерген',
-        null=True)
-
-    class Meta:
-        verbose_name = 'Ингредиент'
-        verbose_name_plural = 'Ингредиенты'
-
-    def __str__(self):
-        return self.name
+        return f'Меню для {self.client}'
 
 
 class Recipe(models.Model):
-    title = models.CharField('Название рецепта', max_length=200)
+    title = models.CharField(
+        'Название рецепта',
+        max_length=200,
+    )
     description = models.TextField(
+        'Краткое описание',
         blank=True,
-        verbose_name='Краткое описание')
+    )
     instructions = models.TextField(
-        verbose_name='Инструкция приготовления')
+        'Инструкция приготовления',
+        blank=True,
+    )
+    type = models.CharField(
+        'Тип блюда',
+        max_length=10,
+        choices=RECIPE_TYPE,
+        default='завтрак',
+    )
+    image = models.ImageField(
+        'Картинка',
+        blank=True,
+    )
     ingredients = models.ManyToManyField(
-        Ingredient,
-        verbose_name='Ингредиенты в рецепте')
+        'Ingredient',
+        verbose_name='Ингредиенты',
+        related_name='in_recipes',
+        blank=True,
+    )
 
     class Meta:
         verbose_name = 'Рецепт'
@@ -81,3 +100,95 @@ class Recipe(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Ingredient(models.Model):
+    amount = models.DecimalField(
+        'Количество',
+        max_digits=6,
+        decimal_places=2,
+    )
+    product = models.ForeignKey(
+        'Product',
+        on_delete=models.CASCADE,
+        verbose_name='Продукт',
+        related_name='ingredients',
+    )
+
+    class Meta:
+        verbose_name = 'Ингредиент'
+        verbose_name_plural = 'Ингредиенты'
+
+    def __str__(self):
+        return self.amount
+
+
+class Product(models.Model):
+    title = models.CharField(
+        'Название',
+        max_length=120,
+        db_index=True,
+    )
+    price = models.DecimalField(
+        'Цена за штуку',
+        max_digits=6,
+        decimal_places=2,
+        blank=True,
+    )
+    unit = models.ForeignKey(
+        'Unit',
+        on_delete=models.SET_NULL,
+        verbose_name='Единицы измерения',
+        related_name='of_products',
+        null=True,
+        blank=True,
+    )
+    allergen = models.ForeignKey(
+        'Allergen',
+        on_delete=models.SET_NULL,
+        verbose_name='Название аллергена',
+        related_name='products',
+        null=True,
+        blank=True,
+    )
+
+    class Meta:
+        verbose_name = 'Продукт'
+        verbose_name_plural = 'Продукты'
+
+    def __str__(self):
+        return self.title
+
+
+class Allergen(models.Model):
+    name = models.CharField(
+        'Название аллергена',
+        max_length=120,
+        db_index=True,
+    )
+
+    class Meta:
+        verbose_name = 'Аллерген'
+        verbose_name_plural = 'Аллергены'
+
+    def __str__(self):
+        return self.name
+
+
+class Unit(models.Model):
+    name = models.CharField(
+        'Единица измерения продукта',
+        max_length=50,
+        blank=True,
+    )
+    short_name = models.CharField(
+        'Сокращение',
+        max_length=20,
+    )
+
+    class Meta:
+        verbose_name = 'Единица измерения продукта'
+        verbose_name_plural = 'Единицы измерения'
+
+    def __str__(self):
+        return self.short_name
