@@ -17,3 +17,15 @@ def order(request):
     context = {
     }
     return render(request, 'order.html', context)
+
+
+def menu(request):
+    context = {
+    }
+    return render(request, 'menu.html', context)
+
+
+def recipe(request):
+    context = {
+    }
+    return render(request, 'recipe.html', context)
