@@ -1,10 +1,14 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
+
+from .models import Recipe
+
 
 def index(request):
     context = {
     }
     return render(request, 'index.html', context)
+
 
 @login_required
 def profile(request):
@@ -25,7 +29,6 @@ def menu(request):
     return render(request, 'menu.html', context)
 
 
-def recipe(request):
-    context = {
-    }
-    return render(request, 'recipe.html', context)
+def recipe(request, recipe_id):
+    recipe = get_object_or_404(Recipe, pk=recipe_id)
+    return render(request, 'recipe.html', {'recipe': recipe})

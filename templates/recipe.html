@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <main style="margin-top: calc(2rem + 75px);">
+        <section>
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 col-md-4 d-flex justify-content-center">
+                        <div class="card foodplan__card_borderless">
+                            <img src="{% static 'img/circle1.png' %}" alt="">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-8 d-flex flex-column justify-content-between">
+                        <div class="row">
+                            <h2>{{ recipe.title }}</h2>
+                            <div class="col-12 col-sm-6 d-flex flex-column justify-content-between">
+                                <h6>{{ recipe.description }}</h6>
+                                <h6>{{ recipe.instructions }}</h6>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <small class="link-secondary">Ингредиенты:</small>
+                                <ul class="list-group list-group-flush">
+                                    {% for ingredient in recipe.ingredients.all %}
+					                    <li class="list-group-item disabled">
+                                            <small>
+                                                {{ ingredient.name }} {{ ingredient.unit }}
+                                            </small>
+                                        </li>
+			                        {% endfor %}
+                                </ul>
+                                <small class="link-secondary">Общая калорийность: 1000 ккал</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+{% endblock content %}
