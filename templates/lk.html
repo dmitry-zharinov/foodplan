@@ -1,26 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
+{% load static %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" href="style.css">
-    <title>Foodplan 2021 - Меню на неделю FOODPLAN</title>
-</head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-md navbar-light fixed-top navbar__opacity">
-            <div class="container">
-                <a class="navbar-brand" href="#">
-                    <img src="img/logo.8d8f24edbb5f.svg" height="55" width="189" alt="">
-                </a>
-                <button class="btn btn-outline-success foodplan_green foodplan__border_green">Выйти</button>
-            </div>
-        </nav>
-    </header>
+{% block content %}
     <main style="margin-top: calc(2rem + 85px);">
         <section>
             <div class="container">
@@ -34,13 +15,15 @@
                     
                     <div class="card col-12 col-md-2 p-3 mb-3 d-flex flex-column align-items-center foodplan__shadow">
                         <div class="position-relative">
-                            <img src="img/test_avatar.png" alt="" width="100" height="100" class="rounded-pill">
+                            <img src="{% static 'img/test_avatar.png' %}" alt="" width="100" height="100" class="rounded-pill">
                             <span class="badge rounded-circle position-absolute bottom-0 end-0 foodplan__bg_green avatar__plus"><a href="#"
                                     class="link-dark text-decoration-none align-middle">+</a></span>
                         </div>
-                        <h3 class="card-title text-center">Tim</h3>
+                        <h3 class="card-title text-center">{{ user.username }}</h3>
                         <div class="d-block">
-                            <button class="btn btn-outline-success foodplan_green foodplan__border_green">Выйти</button>
+                            <a href="{% url 'logout' %}">
+                                <button class="btn btn-outline-success foodplan_green foodplan__border_green">Выйти</button>
+                            </a>                        
                         </div>
                     </div>
 
@@ -90,12 +73,15 @@
                                 <div class="tab-pane fade" id="menu">
                                     <div class="row">
                                         <div class="col-2">
-                                            <img src="img/circle1.png" alt="" class="w-100">
+                                            <img src="{% static 'img/circle1.png' %}" alt="" class="w-100">
                                         </div>
                                         <div class="col-10 col-md-10">
                                             <div class="row">
                                                 <div class="col-12">
-                                                    <h2>Название подписки</h2>
+																									<a
+																													href="{% url 'menu' %}" class="link-dark mx-1" style="text-decoration: none;"><b><h2>Название подписки</h2></b></a>
+
+
                                                 </div>
                                                 <div class="col-md-12 col-lg-9">
                                                     <h6>Описание подписки Lorem ipsum dolor sit, amet consectetur adipisicing elit. Eius saepe ea nobis necessitatibus
@@ -131,29 +117,4 @@
             </div>
         </section>
     </main>
-    <footer>
-        <nav class="navbar navbar-expand-md navbar-light mt-5">
-            <div class="container p-2">
-                <a class="navbar-brand" href="#">
-                    <img src="img/logo.8d8f24edbb5f.svg" height="55" width="189" alt="">
-                </a>
-                <div class="footer__sideBtns d-flex">
-                    <a href="#">
-                        <img src="img/vk.png" height="38" width="auto" alt="">
-                    </a>
-                </div>
-            </div>
-        </nav>
-    </footer>
-    <footer class="footer pt-2" style="border-top: 1px solid lightgray;">
-        <div class="container d-flex flex-row justify-content-center mb-2">
-            <small class="text-center">
-                <h6>© Девман2022. Все права защищены. © Devman2022. All right reserved.</h6><a href="#"
-                    class="link-secondary">Политика конфиденциальности</a>
-            </small>
-        </div>
-    </footer>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-        crossorigin="anonymous"></script>
-</body>
+    {% endblock content %}
