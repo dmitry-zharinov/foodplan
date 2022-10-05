@@ -2,15 +2,15 @@ from django.contrib.auth.models import User
 from django.db import models
 
 PERIOD_CHOICES = [
-    '3 мес.',
-    '12 мес.',
+    (3, '3 мес.'),
+    (12, '12 мес.'),
 ]
 
 RECIPE_TYPE = [
-    'завтрак',
-    'обед',
-    'ужин',
-    'десерт',
+    ('breakfast', 'завтрак'),
+    ('lunch', 'обед'),
+    ('supper', 'ужин'),
+    ('dessert', 'десерт'),
 ]
 
 
@@ -18,6 +18,7 @@ class Menu(models.Model):
     client = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
+        null=True,
     )
     period = models.CharField(
         'Срок подписки',
@@ -27,6 +28,7 @@ class Menu(models.Model):
     )
     calories_per_day = models.IntegerField(
         'Калорий в день (всего)',
+        default=0,
     )
     with_breakfasts = models.BooleanField(
         'Завтраки',
@@ -52,7 +54,6 @@ class Menu(models.Model):
         'Allergen',
         verbose_name='Исключить аллергены',
         related_name='in_menus',
-        null=True,
         blank=True,
     )
 
@@ -107,12 +108,15 @@ class Ingredient(models.Model):
         'Количество',
         max_digits=6,
         decimal_places=2,
+        default=1,
     )
     product = models.ForeignKey(
         'Product',
         on_delete=models.CASCADE,
         verbose_name='Продукт',
         related_name='ingredients',
+        null=True,
+        blank=True,
     )
 
     class Meta:
@@ -165,6 +169,7 @@ class Allergen(models.Model):
         'Название аллергена',
         max_length=120,
         db_index=True,
+        default='',
     )
 
     class Meta:
@@ -184,6 +189,7 @@ class Unit(models.Model):
     short_name = models.CharField(
         'Сокращение',
         max_length=20,
+        blank=True,
     )
 
     class Meta:
