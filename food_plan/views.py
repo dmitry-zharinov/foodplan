@@ -11,3 +11,9 @@ def profile(request):
     context = {
     }
     return render(request, 'lk.html', context)
+
+
+def order(request):
+    context = {
+    }
+    return render(request, 'order.html', context)
