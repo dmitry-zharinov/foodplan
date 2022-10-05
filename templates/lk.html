@@ -15,13 +15,15 @@
                     
                     <div class="card col-12 col-md-2 p-3 mb-3 d-flex flex-column align-items-center foodplan__shadow">
                         <div class="position-relative">
-                            <img src="img/test_avatar.png" alt="" width="100" height="100" class="rounded-pill">
+                            <img src="{% static 'img/test_avatar.png' %}" alt="" width="100" height="100" class="rounded-pill">
                             <span class="badge rounded-circle position-absolute bottom-0 end-0 foodplan__bg_green avatar__plus"><a href="#"
                                     class="link-dark text-decoration-none align-middle">+</a></span>
                         </div>
-                        <h3 class="card-title text-center">Tim</h3>
+                        <h3 class="card-title text-center">{{ user.username }}</h3>
                         <div class="d-block">
-                            <button class="btn btn-outline-success foodplan_green foodplan__border_green">Выйти</button>
+                            <a href="{% url 'logout' %}">
+                                <button class="btn btn-outline-success foodplan_green foodplan__border_green">Выйти</button>
+                            </a>                        
                         </div>
                     </div>
 
@@ -71,7 +73,7 @@
                                 <div class="tab-pane fade" id="menu">
                                     <div class="row">
                                         <div class="col-2">
-                                            <img src="img/circle1.png" alt="" class="w-100">
+                                            <img src="{% static 'img/circle1.png' %}" alt="" class="w-100">
                                         </div>
                                         <div class="col-10 col-md-10">
                                             <div class="row">
