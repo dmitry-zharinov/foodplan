@@ -82,7 +82,7 @@ class Recipe(models.Model):
         'Тип блюда',
         max_length=10,
         choices=RECIPE_TYPE,
-        default='завтрак',
+        default='breakfast',
     )
     image = models.ImageField(
         'Картинка',
