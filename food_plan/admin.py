@@ -29,6 +29,9 @@ class UnitAdmin(admin.ModelAdmin):
 
 @admin.register(Ingredient)
 class IngredientAdmin(admin.ModelAdmin):
+    raw_id_fields = (
+        'product',
+    )
     list_filter = [
         'product',
     ]
