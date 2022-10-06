@@ -84,6 +84,9 @@ class Recipe(models.Model):
         choices=RECIPE_TYPE,
         default='breakfast',
     )
+    calories = models.IntegerField(
+        'Количество кКал',
+    )
     image = models.ImageField(
         'Картинка',
         blank=True,

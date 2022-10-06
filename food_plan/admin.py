@@ -55,6 +55,7 @@ class RecipeAdmin(admin.ModelAdmin):
     list_display = [
         'title',
         'type',
+        'calories',
         'image',
     ]
     exclude = ['ingredients']
