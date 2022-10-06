@@ -14,7 +14,16 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(Menu)
 class MenuAdmin(admin.ModelAdmin):
-    pass
+    list_display = [
+        'client',
+        'period',
+        'calories_per_day',
+        'with_breakfasts',
+        'with_lunches',
+        'with_suppers',
+        'with_desserts',
+        'persons',
+    ]
 
 
 @admin.register(Allergen)
