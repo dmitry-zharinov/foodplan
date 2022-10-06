@@ -57,6 +57,12 @@ def menu(request):
     ]
     client = request.user
     current_menu = Menu.objects.get(client=client)
+    types_of_meal = {
+        'breakfast': current_menu.with_breakfasts,
+        'lunch': current_menu.with_lunches,
+        'supper': current_menu.with_suppers,
+        'dessert': current_menu.with_desserts,
+    }
     possible_recipes = Recipe.objects.filter(
 
     )
@@ -64,6 +70,7 @@ def menu(request):
     context = {
         'menu': current_menu,
         'week': days,
+        'types_of_meal': types_of_meal,
     }
     return render(request, 'menu.html', context)
 
