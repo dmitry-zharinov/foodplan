@@ -2,8 +2,8 @@ from django.contrib.auth.models import User
 from django.db import models
 
 PERIOD_CHOICES = [
-    (3, '3 мес.'),
-    (12, '12 мес.'),
+    ('3', '3 мес.'),
+    ('12', '12 мес.'),
 ]
 
 RECIPE_TYPE = [
@@ -24,7 +24,7 @@ class Menu(models.Model):
         'Срок подписки',
         max_length=10,
         choices=PERIOD_CHOICES,
-        default='3 мес.',
+        default='3',
     )
     calories_per_day = models.IntegerField(
         'Калорий в день (всего)',
