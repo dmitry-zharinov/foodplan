@@ -79,7 +79,7 @@
                                             <div class="row">
                                                 <div class="col-12">
 													<a href="{% url 'menu' %}" class="link-dark mx-1" style="text-decoration: none;">
-                                                        <b><h2>Индивидуальное меню</h2></b>
+                                                        <b><h2>Индивидуальное меню для {{ menu.client }}</h2></b>
                                                     </a>
                                                 </div>
                                                 <div class="col-md-12 col-lg-9">
@@ -93,18 +93,28 @@
                                                 </div>
                                                 <div class="col-md-12 col-lg-3 text-muted d-flex flex-column justify-content-between">
                                                     <div class="d-flex flex-row justify-content-between">
-                                                        <small>Персоны: </small><small>3</small>
+                                                        <small>Персоны: </small><small>{{ menu.persons }}</small>
                                                     </div>
                                                     <div class="d-flex flex-row justify-content-between">
-                                                        <small>Аллергии: </small><small>нет</small>
+                                                        <small>Калории: </small><small>{{ menu.calories_per_day }}</small>
                                                     </div>
                                                     <div class="d-flex flex-row justify-content-between">
-                                                        <small>Калории: </small><small>1400</small>
+                                                        <small>Кол-во приёмов пищи: </small><small>{{ number_of_meals }}</small>
                                                     </div>
                                                     <div class="d-flex flex-row justify-content-between">
-                                                        <small>Кол-во приёмов пищи: </small><small>4</small>
+                                                        <small>Аллергии: </small>
+                                                        {% if menu.allergens.count > 0 %}
+                                                            <small>
+                                                            {% for allergen in menu.allergens.all %}
+                                                                    <span class="badge bg-primary rounded-pill">
+                                                                        {{ allergen }}
+                                                                    </span>
+                                                            {% endfor %}
+                                                            </small>
+                                                        {% else %}
+                                                        <small>нет</small>
+                                                        {% endif %}
                                                     </div>
-                                                    
                                                 </div>
                                             </div>
                                         </div>

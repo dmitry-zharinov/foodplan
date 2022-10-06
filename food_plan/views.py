@@ -1,8 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 
-from .models import Recipe
+from .models import Recipe, Menu
 from .forms import MenuForm
+
 
 def index(request):
     context = {
@@ -12,10 +13,18 @@ def index(request):
 
 @login_required
 def profile(request):
+    current_menu = Menu.objects.get(client=request.user)
+    number_of_meals = sum([
+        current_menu.with_breakfasts,
+        current_menu.with_lunches,
+        current_menu.with_suppers,
+        current_menu.with_desserts,
+    ])
     context = {
+        'menu': current_menu,
+        'number_of_meals': number_of_meals,
     }
     return render(request, 'lk.html', context)
-
 
 
 def order(request):
@@ -37,7 +46,24 @@ def order(request):
 
 
 def menu(request):
+    days = [
+        'Понедельник',
+        'Вторник',
+        'Среда',
+        'Четверг',
+        'Пятница',
+        'Суббота',
+        'Воскресенье',
+    ]
+    client = request.user
+    current_menu = Menu.objects.get(client=client)
+    possible_recipes = Recipe.objects.filter(
+
+    )
+    week_menu = []
     context = {
+        'menu': current_menu,
+        'week': days,
     }
     return render(request, 'menu.html', context)
 
