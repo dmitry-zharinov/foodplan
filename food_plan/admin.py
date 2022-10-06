@@ -29,7 +29,9 @@ class UnitAdmin(admin.ModelAdmin):
 
 @admin.register(Ingredient)
 class IngredientAdmin(admin.ModelAdmin):
-    pass
+    list_filter = [
+        'product',
+    ]
 
 
 class IngredientsInline(admin.TabularInline):
