@@ -1,5 +1,15 @@
 from django.contrib import admin
-from .models import Menu, Allergen, Unit, Ingredient, Recipe
+from .models import Menu, Allergen, Unit, Ingredient, Recipe, Product
+
+
+@admin.register(Product)
+class ProductAdmin(admin.ModelAdmin):
+    list_display = [
+        'title',
+        'price',
+        'unit',
+        'allergen',
+    ]
 
 
 @admin.register(Menu)
@@ -22,6 +32,24 @@ class IngredientAdmin(admin.ModelAdmin):
     pass
 
 
+class IngredientsInline(admin.TabularInline):
+    model = Recipe.ingredients.through
+
+
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
-    pass
+    list_display = [
+        'title',
+        'type',
+        'image',
+    ]
+    exclude = ['ingredients']
+    search_fields = ['title']
+
+    list_filter = [
+        'type',
+    ]
+
+    inlines = [
+        IngredientsInline,
+    ]
