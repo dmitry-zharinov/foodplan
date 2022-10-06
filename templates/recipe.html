@@ -27,6 +27,9 @@
                                                 {{ ingredient.product.title }}
 																							{{ ingredient.amount }}
 																							{{ ingredient.product.unit }}
+																							(Цена:
+																							{% widthratio ingredient.amount 1 ingredient.product.price %}
+																							руб.)
                                             </small>
                                         </li>
 			                        {% endfor %}
