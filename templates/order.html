@@ -36,6 +36,15 @@
                     </div>
                 </div>
                 <h2><strong>Выберите подходящий тариф</strong></h2>
+                <form method="POST" class="post-form" >
+                    {% csrf_token %}
+
+                    {{ order_form.as_p }}
+   
+                    <button type="submit" class="btn btn-outline-success foodplan_green foodplan__border_green w-50">Продолжить</button>
+                </form>
+                <br>
+            <!--
                 <form>
                 <table class="table text-center text-truncate mb-5">
                     <tbody>
@@ -51,6 +60,7 @@
                         <tr>
                             <th scope="row" class="text-start">Завтраки</th>
                             <td>
+                                
                                 <select name="select1" class="form-select">
                                     <option value="0" selected>&#10004;</option>
                                     <option value="1">&#10008;</option>
@@ -130,12 +140,14 @@
                 </table>
                 <button type="submit" id="TableSubmit" class="d-none"></button>
                 </form>
+            -->
 
                 <form class="card d-flex flex-row align-items-baseline mb-5 p-3 foodplan__bg_grey">
                     <label for="exampleInputPassword1" class="form-label me-2">Промокод</label>
                     <input type="password" class="form-control me-2" id="password">
                     <button type="submit" class="btn btn-outline-success foodplan_green foodplan__border_green">Применить</button>
                 </form>
+                <!--
                 <div class="d-flex justify-content-center my-5">
                     <button type="submit" id="btnContinue"
                         class="btn btn-outline-success foodplan_green foodplan__border_green w-50">Продолжить</button>
@@ -145,6 +157,7 @@
                         })
                     </script>
                 </div>
+                -->
             </div>
         </section>
     </main>
