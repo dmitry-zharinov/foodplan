@@ -13,17 +13,23 @@ def index(request):
 
 @login_required
 def profile(request):
-    current_menu = Menu.objects.get(client=request.user)
-    number_of_meals = sum([
-        current_menu.with_breakfasts,
-        current_menu.with_lunches,
-        current_menu.with_suppers,
-        current_menu.with_desserts,
-    ])
-    context = {
-        'menu': current_menu,
-        'number_of_meals': number_of_meals,
-    }
+    try:
+        current_menu = Menu.objects.get(client=request.user)
+        number_of_meals = sum([
+            current_menu.with_breakfasts,
+            current_menu.with_lunches,
+            current_menu.with_suppers,
+            current_menu.with_desserts,
+        ])
+        context = {
+            'menu': current_menu,
+            'number_of_meals': number_of_meals,
+        }
+    except Menu.DoesNotExist:
+        context = {
+            'menu': None,
+            'number_of_meals': None,
+        }
     return render(request, 'lk.html', context)
 
 
