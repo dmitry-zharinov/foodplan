@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load crispy_forms_tags %}
 
 {% block header %}
     <header>
@@ -39,7 +40,7 @@
                 <form method="POST" class="post-form" >
                     {% csrf_token %}
 
-                    {{ order_form.as_p }}
+                    {{ order_form|crispy }}
    
                     <button type="submit" class="btn btn-outline-success foodplan_green foodplan__border_green w-50">Продолжить</button>
                 </form>
@@ -162,3 +163,26 @@
         </section>
     </main>
 {% endblock content %}
+
+{% block script %}
+<script>
+    var choicePremium = document.getElementById("tick_choice_premium"),
+        choiceRegular = document.getElementById("tick_choice_regular"),
+        additionals = document.getElementById("additional_valuations");
+ 
+    choicePremium.onclick = UpdateTotal;
+    choiceRegular.onclick = UpdateTotal;
+    additionals.onchange = UpdateTotal;
+ 
+    function UpdateTotal() {
+       /* Get prices and calculate total */
+       var ticketPrice = choicePremium.checked ? choicePremium.value
+                                               : choiceRegular.value;
+       var additionals = parseInt(additionals.value, 10);
+       var total = ticketPrice + additionals;
+ 
+       /* Attempt to update the value (Inside a TD tag) */
+   document.getElementById('totalPayable').innerHTML="£"+total;
+    }
+ </script>
+{% endblock script %}
