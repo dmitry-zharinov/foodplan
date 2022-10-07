@@ -7,8 +7,9 @@ from .models import Menu, Recipe
 
 
 def index(request):
-    context = {
-    }
+    context = {}
+    if request.user.is_authenticated:
+        context['menu'] = Menu.objects.filter(client=request.user).first()
     return render(request, 'index.html', context)
 
 
@@ -91,6 +92,7 @@ def recipe(request, recipe_id):
     return render(request, 'recipe.html', {'recipe': recipe})
 
 
+@login_required
 def checkout(request):
     context = {
         'client_id': getattr(settings, "PAYPAL_CLIENT_ID", None)
