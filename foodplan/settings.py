@@ -41,9 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+
     'widget_tweaks',
-    
+
     'food_plan',
     'accounts.apps.AccountsConfig',
 ]
@@ -89,16 +89,17 @@ TEMPLATES = [
 WSGI_APPLICATION = 'foodplan.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': Path(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': env.str('PG_PROJECT'),
+        'USER': env.str('PG_USER'),
+        'PASSWORD': env.str('PG_PASSWORD'),
+        'HOST': env.str('PG_ADDRESS'),
+        'PORT': env.str('PG_PORT'),
+        'OPTIONS': {'sslmode': 'require'},
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators

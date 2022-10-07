@@ -12,7 +12,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         headers = {'User-Agent': 'Chrome/51.0.2704.64 Safari/537.36'}
         urls = [
-            f'https://www.edimdoma.ru/retsepty?page={n}' for n in range(4, 5)]
+            f'https://www.edimdoma.ru/retsepty?page={n}' for n in range(1, 5)]
         for url in urls:
             time.sleep(5)
             self.stdout.write(self.style.WARNING("Going thru pages"))
@@ -48,7 +48,7 @@ class Command(BaseCommand):
                     recipe_image = recipe_image_url.split('/')[-1]
                     recipe_image = recipe_image.split('?')[0]
                     urllib.request.urlretrieve(
-                        recipe_image_url, f'static/img/recipes/{recipe_image}')
+                        recipe_image_url, f'media/recipes/{recipe_image}')
                     self.stdout.write("Image saved!")
                 except TypeError:
                     recipe_image = 'default.jpg'
