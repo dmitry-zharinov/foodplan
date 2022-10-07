@@ -6,7 +6,9 @@
     <section>
         <div class="container">
 
+    {% if not current_menu %}
     <h1>Оплата</h1>
+
     <!-- Set up a container element for the button -->
     <div id="paypal-button-container"></div>
 
@@ -30,17 +32,32 @@
 		    return cookieValue;
 		}
 		var csrftoken = getCookie('csrftoken');
+        var menuOrder = {
+            'period': '{{menu_order.period}}',
+            'calories_per_day': '{{menu_order.calories_per_day}}',
+            'with_breakfasts': '{{menu_order.with_breakfasts}}',
+            'with_lunches': '{{menu_order.with_lunches}}',
+            'with_suppers': '{{menu_order.with_suppers}}',
+            'with_desserts': '{{menu_order.with_desserts}}',
+            'persons': '{{menu_order.persons}}',
+            'allergens': '{{menu_order.allergens}}',
+          };
 
         function completeOrder(){
-            var url = "{% url 'profile' %}"
-
-            fetch(url)
+            var url = "{% url 'complete' %}"
+            fetch(url, {
+                method:'POST',
+                headers:{
+                    'Content-type':'application/json',
+                    'X-CSRFToken': csrftoken,
+                },
+                body:JSON.stringify(menuOrder)
+            })
         }
 
 
         // Render the PayPal button into #paypal-button-container
         paypal.Buttons({
-
                 style: {
                     color:  'blue',
                     shape:  'rect',
@@ -65,7 +82,7 @@
                     // Successful capture! For demo purposes:
                     console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
                     var transaction = orderData.purchase_units[0].payments.captures[0];
-                    alert('Transaction '+ transaction.status + ': ' + transaction.id + '\n\nSee console for all available details');
+                    alert('Transaction '+ transaction.status + ': ' + transaction.id + '\n\nПодписка успешно оформлена');
                     completeOrder()
 
                     // Replace the above to show a success message within this page, e.g.
@@ -79,6 +96,8 @@
 
         }).render('#paypal-button-container');
     </script>
+    {% endif %}
+
 </div>
 </section>
 </main>

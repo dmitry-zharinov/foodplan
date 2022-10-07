@@ -28,7 +28,7 @@ urlpatterns = [
     path('menu', views.menu, name='menu'),
     path('recipe/<int:recipe_id>/', views.recipe, name='recipe'),
     path('checkout', views.checkout, name='checkout'),
-
+    path('complete/', views.payment_complete, name="complete"),
     path('auth/', include('django.contrib.auth.urls')),
     path('auth/', include('accounts.urls')),
 ]

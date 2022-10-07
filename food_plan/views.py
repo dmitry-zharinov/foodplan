@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
-
+import json
 from .forms import MenuForm
 from .models import Menu, Recipe
 
@@ -36,16 +36,14 @@ def profile(request):
 
 
 def order(request):
-    context = {
-        'client_id': getattr(settings, "PAYPAL_CLIENT_ID", None)
-    }
-
+    context = {}
     if request.method == "POST":
         order_form = MenuForm(request.POST)
         if order_form.is_valid():
             menu_order = order_form.save(commit=False)
             menu_order.client = request.user
-            menu_order.save()
+            #menu_order.save()
+            request.session['_menu_order'] = request.POST
             return redirect('checkout')
         else:
             print(order_form.errors.as_data())
@@ -92,10 +90,31 @@ def recipe(request, recipe_id):
     return render(request, 'recipe.html', {'recipe': recipe})
 
 
+def payment_complete(request):
+    body = json.loads(request.body)
+    print('BODY:', body)
+    new_menu = Menu.objects.create(
+        client=request.user,
+        period=body['period'],
+        calories_per_day=body['calories_per_day'],
+        with_breakfasts=True if body['with_breakfasts'] == "on" else False,
+        with_lunches=True if body['with_lunches'] == "on" else False,
+        with_suppers=True if body['with_suppers'] == "on" else False,
+        with_desserts=True if body['with_desserts'] == "on" else False,
+        persons=body['persons'],
+    )
+    for allergen in body['allergens']:
+        new_menu.allergens.set(allergen)
+    #new_menu.allergens.set(body['allergens'])
+    return redirect('index')
+
+
 @login_required
 def checkout(request):
+    menu_order = request.session.get('_menu_order')
     context = {
-        'client_id': getattr(settings, "PAYPAL_CLIENT_ID", None)
+        'client_id': getattr(settings, "PAYPAL_CLIENT_ID", None),
+        'menu_order': menu_order,
     }
+    context['current_menu'] = Menu.objects.filter(client=request.user).first()
     return render(request, 'checkout.html', context)
-
