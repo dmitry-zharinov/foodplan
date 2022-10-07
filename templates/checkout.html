@@ -7,7 +7,7 @@
         <div class="container">
 
     {% if not current_menu %}
-    <h1>Оплата</h1>
+    <h1>Сумма заказа: {{ price }} ₽</h1>
 
     <!-- Set up a container element for the button -->
     <div id="paypal-button-container"></div>
@@ -70,7 +70,7 @@
                 return actions.order.create({
                     purchase_units: [{
                         amount: {
-                            value: '250'
+                            value: '{{ price }}'
                         }
                     }]
                 });

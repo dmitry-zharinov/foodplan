@@ -37,6 +37,7 @@ def profile(request):
 
 
 def order(request):
+    BASE_PRICE = 250
     context = {}
     if request.method == "POST":
         order_form = MenuForm(request.POST)
@@ -45,13 +46,15 @@ def order(request):
             menu_order.client = request.user
             #menu_order.save()
             request.session['_menu_order'] = request.POST
+            request.session['_price'] = BASE_PRICE * int(menu_order.period)
             return redirect('checkout')
         else:
             print(order_form.errors.as_data())
     else:
         order_form = MenuForm()
         context = {
-            'order_form': order_form
+            'order_form': order_form,
+            'base_price': BASE_PRICE
         }
     return render(request, 'order.html', context)
 
@@ -135,8 +138,10 @@ def payment_complete(request):
 @login_required
 def checkout(request):
     menu_order = request.session.get('_menu_order')
+    price = request.session.get('_price')
     context = {
         'client_id': getattr(settings, "PAYPAL_CLIENT_ID", None),
+        'price': price,
         'menu_order': menu_order,
     }
     context['current_menu'] = Menu.objects.filter(client=request.user).first()

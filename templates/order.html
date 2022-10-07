@@ -9,8 +9,10 @@
                 <a class="navbar-brand" href="{% url 'index' %}">
                     <img src="{% static 'img/logo.8d8f24edbb5f.svg' %}" height="55" width="189" alt="">
                 </a>
-                <h3 class="text-secondary mt-2 me-2">Стоимость: 00000₽</h3>
-                <button type="submit" id="btnContinue" class="btn btn-sm btn-outline-success foodplan_green foodplan__border_green">Оплатить</button>
+                <h3 class="text-secondary mt-2 me-2">Стоимость: <span id="total-price">000</span>₽</h3>
+                <a href="{% url 'logout' %}">
+                    <button class="btn btn-outline-success foodplan_green foodplan__border_green">Выйти ({{ user.username }})</button>
+                </a>
             </div>
         </nav>
     </header>
@@ -39,10 +41,9 @@
                 <h2><strong>Выберите подходящий тариф</strong></h2>
                 <form method="POST" class="post-form" >
                     {% csrf_token %}
-
                     {{ order_form|crispy }}
-   
-                    <button type="submit" class="btn btn-outline-success foodplan_green foodplan__border_green w-50">Продолжить</button>
+                    <br>
+                    <button type="submit" class="btn btn-outline-success foodplan_green foodplan__border_green w-50 ">Оплатить</button>
                 </form>
                 <br>
             <!--
@@ -142,12 +143,13 @@
                 <button type="submit" id="TableSubmit" class="d-none"></button>
                 </form>
             -->
-
+            <!--
                 <form class="card d-flex flex-row align-items-baseline mb-5 p-3 foodplan__bg_grey">
                     <label for="exampleInputPassword1" class="form-label me-2">Промокод</label>
                     <input type="password" class="form-control me-2" id="password">
                     <button type="submit" class="btn btn-outline-success foodplan_green foodplan__border_green">Применить</button>
-                </form>
+                </form> 
+            -->
                 <!--
                 <div class="d-flex justify-content-center my-5">
                     <button type="submit" id="btnContinue"
@@ -165,24 +167,14 @@
 {% endblock content %}
 
 {% block script %}
-<script>
-    var choicePremium = document.getElementById("tick_choice_premium"),
-        choiceRegular = document.getElementById("tick_choice_regular"),
-        additionals = document.getElementById("additional_valuations");
- 
-    choicePremium.onclick = UpdateTotal;
-    choiceRegular.onclick = UpdateTotal;
-    additionals.onchange = UpdateTotal;
- 
-    function UpdateTotal() {
-       /* Get prices and calculate total */
-       var ticketPrice = choicePremium.checked ? choicePremium.value
-                                               : choiceRegular.value;
-       var additionals = parseInt(additionals.value, 10);
-       var total = ticketPrice + additionals;
- 
-       /* Attempt to update the value (Inside a TD tag) */
-   document.getElementById('totalPayable').innerHTML="£"+total;
-    }
- </script>
+    <script>
+        function calculateTotal(){
+            var container = document.getElementById("total-price");
+            container.innerHTML = this.value * {{ base_price }}; 
+        }
+        period = document.getElementById('id_period');
+        period.addEventListener("change", calculateTotal);
+
+        document.getElementById("total-price").innerHTML = period.value * {{ base_price }};
+    </script>
 {% endblock script %}
