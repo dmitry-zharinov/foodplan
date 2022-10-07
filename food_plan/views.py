@@ -1,3 +1,4 @@
+import random
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
@@ -66,22 +67,44 @@ def menu(request):
         'Суббота',
         'Воскресенье',
     ]
+
     client = request.user
     current_menu = Menu.objects.get(client=client)
+
     types_of_meal = {
         'breakfast': current_menu.with_breakfasts,
         'lunch': current_menu.with_lunches,
         'supper': current_menu.with_suppers,
         'dessert': current_menu.with_desserts,
     }
-    possible_recipes = Recipe.objects.filter(
 
-    )
+    breakfast_calories = current_menu.calories_per_day * 0.2
+    lunch_calories = current_menu.calories_per_day * 0.3
+    supper_calories = current_menu.calories_per_day * 0.3
+    dessert_calories = current_menu.calories_per_day * 0.2
+        
+    breakfasts = Recipe.objects.filter(
+        type='breakfast',
+        calories__lte=breakfast_calories
+    ).order_by("?")
+    lunchs = Recipe.objects.filter(
+        type='lunch',
+        calories__lte=lunch_calories
+    ).order_by("?")
+    suppers = Recipe.objects.filter(
+        type='supper',
+        calories__lte=supper_calories
+    ).order_by("?")
+    desserts = Recipe.objects.filter(
+        type='dessert',
+        calories__lte=dessert_calories
+    ).order_by("?")
+
     week_menu = []
     context = {
         'menu': current_menu,
         'week': days,
-        'types_of_meal': types_of_meal,
+
     }
     return render(request, 'menu.html', context)
 
