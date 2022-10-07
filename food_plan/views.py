@@ -1,8 +1,9 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, redirect, render
 
-from .models import Recipe, Menu
 from .forms import MenuForm
+from .models import Menu, Recipe
 
 
 def index(request):
@@ -34,13 +35,17 @@ def profile(request):
 
 
 def order(request):
+    context = {
+        'client_id': getattr(settings, "PAYPAL_CLIENT_ID", None)
+    }
+
     if request.method == "POST":
         order_form = MenuForm(request.POST)
         if order_form.is_valid():
             menu_order = order_form.save(commit=False)
             menu_order.client = request.user
             menu_order.save()
-            return redirect('profile')
+            return redirect('checkout')
         else:
             print(order_form.errors.as_data())
     else:
@@ -84,3 +89,11 @@ def menu(request):
 def recipe(request, recipe_id):
     recipe = get_object_or_404(Recipe, pk=recipe_id)
     return render(request, 'recipe.html', {'recipe': recipe})
+
+
+def checkout(request):
+    context = {
+        'client_id': getattr(settings, "PAYPAL_CLIENT_ID", None)
+    }
+    return render(request, 'checkout.html', context)
+

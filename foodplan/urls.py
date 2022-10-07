@@ -27,6 +27,7 @@ urlpatterns = [
     path('order', views.order, name='order'),
     path('menu', views.menu, name='menu'),
     path('recipe/<int:recipe_id>/', views.recipe, name='recipe'),
+    path('checkout', views.checkout, name='checkout'),
 
     path('auth/', include('django.contrib.auth.urls')),
     path('auth/', include('accounts.urls')),
