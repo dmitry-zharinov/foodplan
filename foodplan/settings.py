@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'widget_tweaks',
+    'crispy_forms',
 
     'food_plan',
     'accounts.apps.AccountsConfig',
