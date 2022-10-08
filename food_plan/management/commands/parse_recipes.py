@@ -1,20 +1,24 @@
+import os
+import time
+
 from django.core.management.base import BaseCommand
-from food_plan.models import Recipe, Ingredient
 import requests
 from bs4 import BeautifulSoup
-import time
 import urllib.request
+
+from food_plan.models import Recipe, Ingredient
 
 
 class Command(BaseCommand):
     help = 'Parse recipe'
 
     def handle(self, *args, **options):
+        os.makedirs('media', exist_ok=True)
         headers = {'User-Agent': 'Chrome/51.0.2704.64 Safari/537.36'}
         urls = [
             f'https://www.edimdoma.ru/retsepty?page={n}' for n in range(1, 5)]
         for url in urls:
-            time.sleep(5)
+            time.sleep(1)
             self.stdout.write(self.style.WARNING("Going thru pages"))
             res = requests.get(url, headers=headers)
             bs = BeautifulSoup(res.text, 'html.parser')
@@ -50,7 +54,7 @@ class Command(BaseCommand):
                     recipe_image = recipe_image_url.split('/')[-1]
                     recipe_image = recipe_image.split('?')[0]
                     urllib.request.urlretrieve(
-                        recipe_image_url, f'media/recipes/{recipe_image}')
+                        recipe_image_url, f'media/{recipe_image}')
                     self.stdout.write("Image saved!")
                 except TypeError:
                     recipe_image = 'default.jpg'
