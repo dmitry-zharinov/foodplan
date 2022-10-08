@@ -50,7 +50,7 @@ class RecipeAdmin(admin.ModelAdmin):
     ]
     exclude = ['ingredients']
     search_fields = ['title']
-
+    list_editable = ['type']
     list_filter = [
         'type',
     ]
