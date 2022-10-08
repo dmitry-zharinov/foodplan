@@ -91,11 +91,9 @@ class Recipe(models.Model):
         'Картинка',
         blank=True,
     )
-    ingredients = models.ManyToManyField(
-        'Ingredient',
-        verbose_name='Ингредиенты',
-        related_name='in_recipes',
-        blank=True,
+    portions = models.IntegerField(
+        'Порция',
+        default=1,
     )
 
     class Meta:
@@ -113,10 +111,39 @@ class Ingredient(models.Model):
         decimal_places=2,
         default=1,
     )
-    product = models.ForeignKey(
-        'Product',
+    title = models.CharField(
+        'Название ингредиента',
+        max_length=120,
+        db_index=True,
+        default='ингредиент'
+    )
+
+    unit = models.CharField(
+        'Измерение ингредиента',
+        max_length=120,
+        default='1 ложка'
+    )
+
+    price = models.DecimalField(
+        'Цена за штуку',
+        max_digits=6,
+        decimal_places=2,
+        null=True,
+    )
+
+    allergen = models.ForeignKey(
+        'Allergen',
+        on_delete=models.SET_NULL,
+        verbose_name='Название аллергена',
+        related_name='products',
+        null=True,
+        blank=True,
+    )
+
+    recipe = models.ForeignKey(
+        'Recipe',
         on_delete=models.CASCADE,
-        verbose_name='Продукт',
+        verbose_name='Рецепт',
         related_name='ingredients',
         null=True,
         blank=True,
@@ -128,43 +155,6 @@ class Ingredient(models.Model):
 
     def __str__(self):
         return f"{self.product}, {self.amount}"
-
-
-class Product(models.Model):
-    title = models.CharField(
-        'Название',
-        max_length=120,
-        db_index=True,
-    )
-    price = models.DecimalField(
-        'Цена за штуку',
-        max_digits=6,
-        decimal_places=2,
-        blank=True,
-    )
-    unit = models.ForeignKey(
-        'Unit',
-        on_delete=models.SET_NULL,
-        verbose_name='Единицы измерения',
-        related_name='of_products',
-        null=True,
-        blank=True,
-    )
-    allergen = models.ForeignKey(
-        'Allergen',
-        on_delete=models.SET_NULL,
-        verbose_name='Название аллергена',
-        related_name='products',
-        null=True,
-        blank=True,
-    )
-
-    class Meta:
-        verbose_name = 'Продукт'
-        verbose_name_plural = 'Продукты'
-
-    def __str__(self):
-        return self.title
 
 
 class Allergen(models.Model):
@@ -182,22 +172,3 @@ class Allergen(models.Model):
     def __str__(self):
         return self.name
 
-
-class Unit(models.Model):
-    name = models.CharField(
-        'Единица измерения продукта',
-        max_length=50,
-        blank=True,
-    )
-    short_name = models.CharField(
-        'Сокращение',
-        max_length=20,
-        blank=True,
-    )
-
-    class Meta:
-        verbose_name = 'Единица измерения продукта'
-        verbose_name_plural = 'Единицы измерения'
-
-    def __str__(self):
-        return self.short_name
