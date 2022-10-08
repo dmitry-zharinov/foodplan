@@ -4,6 +4,9 @@ from .models import Menu, Allergen, Ingredient, Recipe
 
 @admin.register(Menu)
 class MenuAdmin(admin.ModelAdmin):
+    raw_id_fields = (
+        'client',
+    )
     list_display = [
         'client',
         'period',
