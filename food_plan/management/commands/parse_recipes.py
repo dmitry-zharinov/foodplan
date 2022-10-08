@@ -31,6 +31,8 @@ class Command(BaseCommand):
                     "input", {"class": "field__input"})['value']
                 recipe_name = recipe_bs.find(
                     "h1", {"class": "recipe-header__name"}).text
+                recipe_calories = recipe_bs.find(
+                    "div", {"class": "kkal-meter__value"}).text
 
                 recipe_instruction = recipe_bs.find_all(
                     "div", {"class": "plain-text recipe_step_text"})
@@ -60,7 +62,8 @@ class Command(BaseCommand):
                     description=recipe_description,
                     instructions=recipe_instruction,
                     image=recipe_image,
-                    portions=recipe_portions
+                    portions=recipe_portions,
+                    calories=int(recipe_calories),
                 )
                 recipe.save()
                 self.stdout.write("Recipe saved.")
