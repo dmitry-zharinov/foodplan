@@ -51,6 +51,9 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -63,11 +66,13 @@ ROOT_URLCONF = 'foodplan.urls'
 
 TEMPLATE_DIR = Path(BASE_DIR, 'templates')
 
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
 STATICFILES_DIRS = [
     Path(BASE_DIR, 'static'),
 ]
 
-STATIC_ROOT = ''    # Static files for deployment
+STATIC_ROOT = Path(BASE_DIR, 'staticfiles')
 
 MEDIA_ROOT = Path(BASE_DIR, 'media')
 
