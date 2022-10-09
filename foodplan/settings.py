@@ -66,7 +66,7 @@ ROOT_URLCONF = 'foodplan.urls'
 
 TEMPLATE_DIR = Path(BASE_DIR, 'templates')
 
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
 STATICFILES_DIRS = [
     Path(BASE_DIR, 'static'),
