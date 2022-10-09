@@ -183,3 +183,11 @@ def checkout(request):
     }
     context['current_menu'] = Menu.objects.filter(client=request.user).first()
     return render(request, 'checkout.html', context)
+
+
+def privacy(request):
+    return render(request, 'privacy.html')
+
+
+def agreements(request):
+    return render(request, 'agreements.html')
