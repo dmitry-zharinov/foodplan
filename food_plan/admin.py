@@ -19,13 +19,33 @@ class MenuAdmin(admin.ModelAdmin):
     ]
 
 
-@admin.register(Allergen)
-class AllergenAdmin(admin.ModelAdmin):
-    pass
+class IngredientsInLine(admin.TabularInline):
+    model = Ingredient
+
+
+@admin.register(Recipe)
+class RecipeAdmin(admin.ModelAdmin):
+    list_display = [
+        'title',
+        'type',
+        'calories',
+        'image',
+    ]
+    search_fields = ['title']
+    list_editable = ['type']
+    list_filter = [
+        'type',
+    ]
+    inlines = [
+        IngredientsInLine,
+    ]
 
 
 @admin.register(Ingredient)
 class IngredientAdmin(admin.ModelAdmin):
+    raw_id_fields = (
+        'recipe',
+    )
     list_display = [
         'title',
         'amount',
@@ -39,25 +59,6 @@ class IngredientAdmin(admin.ModelAdmin):
     ]
 
 
-# class IngredientsInline(admin.TabularInline):
-#     model = Recipe.ingredients.through
-
-
-@admin.register(Recipe)
-class RecipeAdmin(admin.ModelAdmin):
-    list_display = [
-        'title',
-        'type',
-        'calories',
-        'image',
-    ]
-    exclude = ['ingredients']
-    search_fields = ['title']
-    list_editable = ['type']
-    list_filter = [
-        'type',
-    ]
-
-    # inlines = [
-    #     IngredientsInline,
-    # ]
+@admin.register(Allergen)
+class AllergenAdmin(admin.ModelAdmin):
+    pass

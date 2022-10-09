@@ -1,4 +1,3 @@
-import random
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
@@ -59,6 +58,7 @@ def order(request):
     return render(request, 'order.html', context)
 
 
+@login_required
 def menu(request):
     days = [
         'Понедельник',
@@ -70,8 +70,7 @@ def menu(request):
         'Воскресенье',
     ]
 
-    client = request.user
-    current_menu = Menu.objects.get(client=client)
+    current_menu = Menu.objects.get(client=request.user)
 
     types_of_meal = {
         'breakfast': current_menu.with_breakfasts,
@@ -111,9 +110,26 @@ def menu(request):
     return render(request, 'menu.html', context)
 
 
+@login_required
 def recipe(request, recipe_id):
+    current_menu = Menu.objects.get(client=request.user)
     recipe = get_object_or_404(Recipe, pk=recipe_id)
-    return render(request, 'recipe.html', {'recipe': recipe})
+    serialized_ingredients = {}
+    for ingredient in recipe.ingredients.all():
+        serialized_ingredients[ingredient.title] = {
+            'amount': round(
+                ingredient.amount / recipe.portions * current_menu.persons, 1
+            ),
+            'unit': ingredient.unit,
+            'price': ingredient.price,
+            'allergen': ingredient.allergen,
+        }
+    context = {
+        'recipe': recipe,
+        'persons': current_menu.persons,
+        'ingredients': serialized_ingredients,
+    }
+    return render(request, 'recipe.html', context)
 
 
 def payment_complete(request):

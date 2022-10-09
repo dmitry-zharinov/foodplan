@@ -135,7 +135,7 @@ class Ingredient(models.Model):
         'Allergen',
         on_delete=models.SET_NULL,
         verbose_name='Название аллергена',
-        related_name='products',
+        related_name='on_ingredients',
         null=True,
         blank=True,
     )
@@ -154,7 +154,7 @@ class Ingredient(models.Model):
         verbose_name_plural = 'Ингредиенты'
 
     def __str__(self):
-        return f"{self.product}, {self.amount}"
+        return f"{self.title}, {self.amount} {self.unit}"
 
 
 class Allergen(models.Model):
