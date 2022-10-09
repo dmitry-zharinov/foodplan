@@ -69,45 +69,66 @@ def menu(request):
         'Суббота',
         'Воскресенье',
     ]
-
     current_menu = Menu.objects.get(client=request.user)
-
-    types_of_meal = {
-        'breakfast': current_menu.with_breakfasts,
-        'lunch': current_menu.with_lunches,
-        'supper': current_menu.with_suppers,
-        'dessert': current_menu.with_desserts,
-    }
-
     breakfast_calories = current_menu.calories_per_day * 0.2
     lunch_calories = current_menu.calories_per_day * 0.3
     supper_calories = current_menu.calories_per_day * 0.3
     dessert_calories = current_menu.calories_per_day * 0.2
-        
-    breakfasts = Recipe.objects.filter(
-        type='breakfast',
-        calories__lte=breakfast_calories
-    ).order_by("?")
-    lunchs = Recipe.objects.filter(
-        type='lunch',
-        calories__lte=lunch_calories
-    ).order_by("?")
-    suppers = Recipe.objects.filter(
-        type='supper',
-        calories__lte=supper_calories
-    ).order_by("?")
-    desserts = Recipe.objects.filter(
-        type='dessert',
-        calories__lte=dessert_calories
-    ).order_by("?")
-
-    week_menu = []
+    if current_menu.with_breakfasts:
+        breakfasts = Recipe.objects.filter(
+            type='breakfast',
+            calories__lte=breakfast_calories
+        )[:7]
+    else:
+        breakfasts = None
+    if current_menu.with_lunches:
+        lunches = Recipe.objects.filter(
+            type='lunch',
+            calories__lte=lunch_calories
+        )[:7]
+    else:
+        lunches = None
+    if current_menu.with_suppers:
+        suppers = Recipe.objects.filter(
+            type='supper',
+            calories__lte=supper_calories
+        )[:7]
+    else:
+        suppers = None
+    if current_menu.with_desserts:
+        desserts = Recipe.objects.filter(
+            type='dessert',
+            calories__lte=dessert_calories
+        )[:7]
+    else:
+        desserts = None
+    week_menu = {}
+    limitless_breakfasts = get_meal_for_day(breakfasts)
+    limitless_lunches = get_meal_for_day(lunches)
+    limitless_suppers = get_meal_for_day(suppers)
+    limitless_desserts = get_meal_for_day(desserts)
+    for day in days:
+        week_menu[day] = [
+            next(limitless_breakfasts) if breakfasts else None,
+            next(limitless_lunches) if lunches else None,
+            next(limitless_suppers) if suppers else None,
+            next(limitless_desserts) if desserts else None,
+        ]
     context = {
-        'menu': current_menu,
+        'client': current_menu.client,
         'week': days,
-
+        'menu': week_menu,
     }
     return render(request, 'menu.html', context)
+
+
+def get_meal_for_day(meal):
+    day_number = 0
+    while day_number < 7:
+        if day_number >= meal.count():
+            day_number = 0
+        yield meal[day_number]
+        day_number += 1
 
 
 @login_required

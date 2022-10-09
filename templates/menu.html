@@ -6,60 +6,46 @@
 		<section>
 			<div class="container">
 				<div class="col-12">
-					<h2>Индивидуальное меню для {{ menu.client }}</h2>
+					<h2>Индивидуальное меню для {{ client }}</h2>
 				</div>
-
-				{% for day in week %}
+				{% for day, meals in menu.items %}
 					<div class="card">
 						<h5 class="card-header">{{ day }}</h5>
-						{% for type in types_of_meal %}
-							{{ type }}
-							<div class="card-body">
-								<div class="card col-12 p-3 mb-3 foodplan__shadow">
-							<div class="row">
-								<div class="col-2">
-									<img src="{% static 'img/1.jpg' %}" alt=""
-											 class="w-100">
-								</div>
-									<div class="col-10 col-md-10">
-										<div class="row">
-											<div class="col-12">
-												<a href="{% url 'recipe' 1 %}"
-												   class="link-dark mx-1" style="text-decoration: none;"><b><h3>Название блюда - завтрак</h3></b></a>
-											</div>
+							{% for meal in meals %}
+								{% if meal %}
+									<div class="card-body">
+										<div class="card col-12 p-3 mb-3 foodplan__shadow">
+											<b><h4>{{ meal.get_type_display }}</h4></b>
+											<div class="row">
+												<div class="col-2">
+													{% if meal.image %}
+														<img src="{{ meal.image.url }}" alt="" class="w-100">
+													{% else %}
+													<img src="{% static 'img/circle1.png' %}" alt="" class="w-100">
+													{% endif %}
+												</div>
+												<div class="col-10 col-md-10">
+													<div class="row">
+														<div class="col-12">
+															<a href="{% url 'recipe' meal.pk %}" class="link-dark mx-1" style="text-decoration: none;">
+																<b><h5>{{ meal.title }}</h5></b>
+															</a>
+														</div>
 
-											<div class="col-md-12 col-lg-9">
-												<h6>Описание подписки Lorem ipsum dolor sit, amet consectetur adipisicing elit. Eius saepe ea nobis necessitatibus
-														consectetur rem! Eligendi assumenda facere sint quibusdam dolorem quasi doloribus nemo, temporibus molestiae
-														distinctio cum laboriosam sed. Lorem ipsum dolor sit, amet consectetur adipisicing elit. Eius saepe ea nobis
-														necessitatibus consectetur rem! Eligendi
-														assumenda facere sint quibusdam dolorem quasi doloribus nemo, temporibus molestiae distinctio cum laboriosam
-														sed.</h6>
-											</div>
-
-											<div class="col-md-12 col-lg-3 text-muted d-flex flex-column justify-content-between">
-												<div class="d-flex flex-row justify-content-between">
-														<small>Персоны: </small><small>3</small>
-												</div>
-												<div class="d-flex flex-row justify-content-between">
-														<small>Аллергии: </small><small>нет</small>
-												</div>
-												<div class="d-flex flex-row justify-content-between">
-														<small>Калории: </small><small>1400</small>
-												</div>
-												<div class="d-flex flex-row justify-content-between">
-														<small>Кол-во приёмов пищи: </small><small>4</small>
+														<div class="col-md-12 col-lg-9">
+															<h6>
+																{{ meal.description|truncatewords:20 }}
+															</h6>
+														</div>
+													</div>
 												</div>
 											</div>
 										</div>
 									</div>
-							</div>
-						</div>
-							</div>
-						{% endfor %}
+								{% endif %}
+							{% endfor %}
 					</div>
 				{% endfor %}
-
 			</div>
 		</section>
     </main>
