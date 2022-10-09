@@ -36,7 +36,7 @@ def profile(request):
 
 
 def order(request):
-    BASE_PRICE = 250
+    BASE_PRICE = 100
     context = {}
     if request.method == "POST":
         order_form = MenuForm(request.POST)
