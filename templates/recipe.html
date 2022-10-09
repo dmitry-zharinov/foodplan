@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <main style="margin-top: calc(2rem + 75px);">
+        <section>
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 col-md-4 d-flex justify-content-center">
+                        <div class="card foodplan__card_borderless">
+                            {% if recipe.image %}
+                                <img src="{{ recipe.image.url }}" alt="">
+                            {% else %}
+                            <img src="{% static 'img/circle1.png' %}" alt="">
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-8 d-flex flex-column justify-content-between">
+                        <div class="row">
+                            <h2>{{ recipe.title }} на {{ recipe.get_type_display }}</h2>
+                            <div class="col-12 col-sm-6 d-flex flex-column justify-content-between">
+                                <h6>{{ recipe.description }}</h6>
+                                <h6>{{ recipe.instructions }}</h6>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <small class="link-secondary">
+                                    Ингредиенты на {{ persons }}
+                                    {% if persons == 1 %}
+                                        порцию
+                                    {% elif 2 <= persons <= 4 %}
+                                        порции
+                                    {% else %}
+                                        порций
+                                    {% endif %}
+                                    :
+                                </small>
+                                <ul class="list-group list-group-flush">
+                                    {% for title, ingredient in ingredients.items %}
+					                    <li class="list-group-item disabled">
+                                            <small>
+                                                {{ title }}
+                                                {{ ingredient.amount }}
+                                                {{ ingredient.unit }}
+                                                (Цена:
+                                                {% if ingredient.price %}
+                                                    {{ ingredient.price }}
+                                                {% else %}
+                                                    -
+                                                {% endif %}
+                                                руб.)
+                                                {% if ingredient.allergen %}
+                                                    <span class="badge bg-primary rounded-pill">
+                                                        {{ ingredient.allergen }}
+                                                    </span>
+                                                {% endif %}
+                                            </small>
+                                        </li>
+			                        {% endfor %}
+                                </ul>
+                                <small class="link-secondary">
+                                    Общая калорийность на 1 порцию:
+                                    {{ recipe.calories }} кКал</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+{% endblock content %}

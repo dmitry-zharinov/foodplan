@@ -26,8 +26,11 @@ urlpatterns = [
     path('profile', views.profile, name='profile'),
     path('order', views.order, name='order'),
     path('menu', views.menu, name='menu'),
-    path('recipe', views.recipe, name='recipe'),
-
+    path('privacy', views.privacy, name='privacy'),
+    path('agreements', views.agreements, name='agreements'),
+    path('recipe/<int:recipe_id>/', views.recipe, name='recipe'),
+    path('checkout', views.checkout, name='checkout'),
+    path('complete/', views.payment_complete, name="complete"),
     path('auth/', include('django.contrib.auth.urls')),
     path('auth/', include('accounts.urls')),
 ]
